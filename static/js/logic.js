@@ -26,22 +26,16 @@ function createFeatures(featureData) {
         onEachFeature: onEachFeature
     });
 
-    createMap(earthquakes);
+    createMap(earthquakes, featureData);
 };
 
-function createMap(earthquakeMapData){
-    
-    // Create the base layers.
-    let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    });
+function createMap(earthquakeMapData, featureData){
 
     let topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
     });
 
     let baseMaps = {
-        "Street Map": street,
         "Topographic Map": topo
     };
 
@@ -49,16 +43,31 @@ function createMap(earthquakeMapData){
     let overlayMaps = {
         Earthquakes: earthquakeMapData
     };
-    
+
+    var circleMarkers = L.layerGroup().addTo(myMap);
+
+    for (var i = 0; i < featureData.length; i++) {
+        let indEarthquake = featureData[i].properties;
+        let radius = indEarthquake.mag / 10;
+        let color = "blue"
+        let circle = L.circleMarker([featureData.coordinates], {
+            radius: radius,
+            color: color,
+            fillOpacity: 0.5
+        });
+        circleMarkers.addLayer(circle);
+    }
+
     let myMap = L.map("map", {
         center: [
           37.09, -95.71
         ],
-        zoom: 5,
-        layers: [street, earthquakeMapData]
+        zoom: 3,
+        layers: [topo, earthquakeMapData, circleMarkers]
     });
 
     L.control.layers(baseMaps, overlayMaps, {
         collapsed: false
     }).addTo(myMap);
+
 };
