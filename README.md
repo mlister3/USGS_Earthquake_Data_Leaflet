@@ -1,5 +1,7 @@
 # USGS_Earthquake_Data_Leaflet
 
+Webpage deployed [Here](https://mlister3.github.io/USGS_Earthquake_Data_Leaflet/)
+
 ## Instructions
 
 The instructions for this activity are broken into two parts:
